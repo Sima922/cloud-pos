@@ -62,8 +62,9 @@ Cloud POS is a subscription-based, multi-tenant Point of Sale platform. Each bus
 
 ### Architecture
 
-![Architecture](docs/screenshots/Pos Architecture.png)
+![Architecture](docs/screenshots/Pos_Architecture.png)
 
+---
 
 **Key architectural decision — Subscription Scoping:**
 Every view, queryset, and API endpoint resolves the current user's `ClientSubscription` before querying data. This ensures complete data isolation between different business tenants using the same deployment.
