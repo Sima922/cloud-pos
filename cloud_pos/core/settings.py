@@ -47,13 +47,17 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+
+    # WhiteNoise
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this line
+
     'subscriptions.middleware.SubscriptionRequiredMiddleware',
 ]
 
@@ -144,7 +148,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -184,9 +188,13 @@ STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET', default='')
 
 DEFAULT_TAX_RATE = config('DEFAULT_TAX_RATE', default=0.08, cast=float)
 LOW_STOCK_THRESHOLD = config('LOW_STOCK_THRESHOLD', default=5, cast=int)
+# Currency Configuration
+CURRENCY_SYMBOL = config('CURRENCY_SYMBOL', default='P')
+CURRENCY = config('CURRENCY', default='BWP')
+THOUSAND_SEPARATOR = config('THOUSAND_SEPARATOR', default=True, cast=bool)
+DECIMAL_PLACES = config('DECIMAL_PLACES', default=2, cast=int)
 
 SUBSCRIPTION_REQUIRED = config('SUBSCRIPTION_REQUIRED', default=False, cast=bool)
-
 
 
 

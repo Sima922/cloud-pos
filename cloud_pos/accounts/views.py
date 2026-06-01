@@ -6,6 +6,10 @@ from django.shortcuts import redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+from django.contrib import messages
+from django.contrib.auth.views import PasswordChangeView
 
 from .forms import LoginForm, RegistrationForm
 from .models import ClientSubscription, User
@@ -14,6 +18,7 @@ class CustomLoginView(FormView):
     """
     Renders the login form, authenticates via email, logs in any active user.
     """
+
     template_name = 'accounts/login.html'
     form_class = LoginForm
     success_url = reverse_lazy('dashboard')
@@ -21,12 +26,24 @@ class CustomLoginView(FormView):
     def form_valid(self, form):
         email = form.cleaned_data['username']
         password = form.cleaned_data['password']
-        user = authenticate(self.request, username=email, password=password)
+
+        user = authenticate(
+            self.request,
+            username=email,
+            password=password
+        )
+
         if user:
             login(self.request, user)
-            return super().form_valid(form)
+
+            # Redirect directly to dashboard
+            return redirect(self.get_success_url())
+
         form.add_error(None, "Invalid email or password")
+
         return self.form_invalid(form)
+    
+  
 
 
 class CustomRegisterView(UserPassesTestMixin, FormView):
@@ -94,3 +111,15 @@ class CustomRegisterView(UserPassesTestMixin, FormView):
             f"User {new_user.get_full_name()} ({new_user.role}) created successfully."
         )
         return super().form_valid(form)
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'accounts/change_password.html'
+    success_url = reverse_lazy('dashboard')
+
+    def form_valid(self, form):
+
+        messages.success(
+            self.request,
+            "Password changed successfully."
+        )
+
+        return super().form_valid(form)    
